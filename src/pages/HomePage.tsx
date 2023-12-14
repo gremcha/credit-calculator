@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
-import '../../styles/calc.css'
-import CalcInput from './CalcInput'
-import CalcSelect from './CalcSelect'
-import CalcButton from './CalcButton'
-import CalculatorTypePicker from './CalculatorTypePicker'
+import React, { useMemo, useState } from 'react'
+import '../styles/calc.css'
+
+import calculation from '../services/calculation'
+
+import CalcInput from '../components/calcContainer/CalcInput'
+import CalcSelect from '../components/calcContainer/CalcSelect'
+import CalcButton from '../components/calcContainer/CalcButton'
+import CalculatorTypePicker from '../components/calcContainer/CalculatorTypePicker'
+import CalculationResult from '../components/calcutationResult/CalcutatonResult'
 
 export enum CalculationTypeEnum {
     differentiated = 'Дифференцированный',
@@ -66,7 +70,7 @@ function validationPercent(
     }
 }
 
-export default function Calculator() {
+export default function HomePage() {
     const [calculatorType, setCalculatorType] = useState(
         CalculatorTypeEnum.loanAmount
     )
@@ -84,6 +88,29 @@ export default function Calculator() {
     const [periodicityPayment, setPeriodicityPayment] = useState(
         PeriodicityPaymentTypeEnum.monthly
     )
+
+    const calculationResult = useMemo(
+        () =>
+            calculation(
+                calculationType.toString(),
+                calculatorType.toString(),
+                +creditSum.replace(/\s/g, ''),
+                +creditPercent,
+                creditPeriodUnit == 'м.' ? +creditPeriod : +creditPeriod * 12,
+                periodicityPayment.toString()
+            ),
+        [
+            calculationType,
+            calculatorType,
+            creditSum,
+            creditPercent,
+            creditPeriod,
+            periodicityPayment,
+            creditPeriodUnit,
+        ]
+    )
+    console.log(calculationResult)
+
     return (
         <div className="calculator">
             <div className="calc-form">
@@ -149,7 +176,13 @@ export default function Calculator() {
                     </div>
                 </div>
             </div>
-            <div className="total"></div>
+            <div className="total">
+                <CalculationResult
+                    calculationInfo={calculationResult.calculationInfo}
+                    creditInfo={calculationResult.creditInfo}
+                    creditCalculation={calculationResult.creditCalculation}
+                />
+            </div>
         </div>
     )
 }

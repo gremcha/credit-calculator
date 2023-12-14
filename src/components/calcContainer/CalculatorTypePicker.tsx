@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import '../../styles/calc.css'
-import { CalculatorTypeEnum } from './Calculator'
+import { CalculatorTypeEnum } from '../../pages/HomePage'
 
 interface CalculatorTypePickerInterface {
     calculatorTypeEnum: typeof CalculatorTypeEnum
@@ -17,6 +17,10 @@ export default function CalculatorTypePicker(
                 <div
                     className={`type${
                         value === props.calculatorType ? '-active' : ''
+                    } ${
+                        value === props.calculatorType
+                            ? 'slide-left'
+                            : 'slide-right'
                     }`}
                     onClick={() => props.onChange(value)}
                 >

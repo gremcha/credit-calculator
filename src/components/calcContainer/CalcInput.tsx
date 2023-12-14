@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import '../../styles/calc.css'
-import { CreditPeriodUnitTypes } from './Calculator'
+import { CreditPeriodUnitTypes } from '../../pages/HomePage'
 
 interface CalcInputInterface {
     value: string
@@ -43,7 +43,12 @@ function SelectInput(props: SelectInputInterface) {
     )
 
     return (
-        <div className="calc-input-select" onClick={() => setIsOpen(!isOpen)}>
+        <div
+            className="calc-input-select"
+            tabIndex={1}
+            onBlur={() => setIsOpen(false)}
+            onClick={() => setIsOpen(!isOpen)}
+        >
             <div className="placeholder">
                 {props.unit}
                 <i className={isOpen ? 'arrow up' : 'arrow down'}></i>

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   box-sizing: border-box;
 }
@@ -5,11 +6,13 @@
 .calculator {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .total {
-  height: 50vh;
-  width: 50vw;
+  height: 400px;
+  margin-top: 50px;
+  border-radius: 10px;
   background-color: white;
 }
 
@@ -21,6 +24,7 @@
 }
 
 .calc-container {
+  position: relative;
   padding: 0 3%;
   display: flex;
   flex-direction: row;
@@ -35,7 +39,7 @@
   align-items: flex-end;
   box-sizing: border-box;
   background-color: white;
-  margin: 35px 10px;
+  margin: 35px 20px;
   border-radius: 10px;
 }
 
@@ -51,21 +55,44 @@
 .calc-button {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
+  height: 62px;
+  width: 242px;
+  margin: 0;
+  background-color: rgba(255, 255, 255, 0.7215686275);
+  border-radius: 8px;
+}
+
+.calc-button-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 35px 20px;
+  left: 0;
+  height: 70px;
+  width: 250px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #112dca, #199d36);
+}
+
+.calc-button::after {
+  content: "График платежей";
   text-align: center;
-  font-weight: bold;
-  font-size: 20px;
-  color: white;
-  cursor: default;
+  font-weight: 900;
+  font-size: 24px;
+  cursor: pointer;
   letter-spacing: 1px;
-  background-image: url("../../public/bg_button.png");
+  background-image: linear-gradient(to right, #112dca, #199d36);
   background-size: cover;
-  border: 2px solid white;
-  background-color: #32666D;
-  padding-left: 15px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: rgba(255, 255, 255, 0);
 }
 
 .type-picker {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -86,7 +113,7 @@
   width: 55%;
   height: 40px;
   border-radius: 100px;
-  color: #b3b3b3;
+  color: rgba(255, 255, 255, 0.7215686275);
 }
 
 .type-active {
@@ -94,7 +121,7 @@
   text-align: center;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
   width: 55%;
   height: 40px;
   border-radius: 100px;
@@ -183,4 +210,39 @@
 .arrow.up {
   transform: rotate(225deg);
   -webkit-transform: rotate(225deg);
+}
+
+.credit-info {
+  display: flex;
+  width: 250px;
+  padding: 20px;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.calc-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.calc-result-header {
+  margin: 0;
+  color: #5d5d5d;
+  font-size: 15px;
+  text-align: left;
+}
+
+.calc-result-value {
+  color: black;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.calc-result-error-header {
+  color: #ae2323;
+  font-size: 16px;
+  text-align: left;
 }/*# sourceMappingURL=calc.css.map */

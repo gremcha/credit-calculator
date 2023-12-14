@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import '../../styles/calc.css'
-import { PeriodicityPaymentTypeEnum, CalculationTypeEnum } from './Calculator'
+import {
+    PeriodicityPaymentTypeEnum,
+    CalculationTypeEnum,
+} from '../../pages/HomePage'
 
 interface CalcInputInterface {
     enum: typeof CalculationTypeEnum | typeof PeriodicityPaymentTypeEnum
@@ -19,10 +22,6 @@ export default function CalcSelect(props: CalcInputInterface) {
             </div>
         ) : null
     )
-
-    function selectClick() {
-        setIsOpen(!isOpen)
-    }
 
     return (
         <div
