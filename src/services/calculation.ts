@@ -6,11 +6,9 @@ export default function calculation(
     creditPeriod: number,
     periodicityPaymentType: string
 ) {
-    console.log(arguments)
-
     if (periodicityPaymentType === 'Ежемесячно') {
         creditPercent = +(creditPercent / 1200).toFixed(4)
-    } else if (periodicityPaymentType === 'Ежегодно') {
+    } else if (periodicityPaymentType === 'Ежегодно' && creditPeriod > 11) {
         creditPercent = creditPercent / 100
         creditPeriod = ((creditPeriod / 12) | 0) + +Boolean(creditPeriod % 1)
     } else {
@@ -67,7 +65,7 @@ function differentiatedCalculation(
     let defaultPayment = 0
     let calculationTypeInfo = [
         { header: 'Тело кредита', result: 0 },
-        { header: 'Первый платежа', result: 0 },
+        { header: 'Первый платеж', result: 0 },
     ]
     let calculationTypeInfoIndex = 0
     const creditCalculation = []
@@ -103,16 +101,15 @@ function differentiatedCalculation(
             defaultPayment = creditSum
         }
         const onePayment = percentPayment + defaultPayment
+        creditSum -= defaultPayment
         creditCalculation.push({
             percentPayment: percentPayment,
             onePayment: onePayment,
             loanBalance: creditSum,
         })
-        creditSum -= defaultPayment
 
         creditInfo.sum += onePayment
         creditInfo.percentSum += percentPayment
-        console.log(onePayment, creditInfo.sum)
     }
     calculationTypeInfo[1].result = creditCalculation[0].onePayment
     return {
@@ -174,6 +171,9 @@ function annuityCalculation(
             onePayment *
             (1 - 1 / (1 + creditPercent) ** (creditPeriod - paymentIndex + 1))
         ).toFixed(2)
+        if (creditSum < onePayment) {
+            onePayment = creditSum
+        }
         creditSum -= onePayment
         creditCalculation.push({
             percentPayment: +percentPayment.toFixed(2),

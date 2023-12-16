@@ -1,13 +1,15 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import '../styles/calc.css'
 
 import calculation from '../services/calculation'
+import validCalculationResult from '../services/validCalculationResult'
 
 import CalcInput from '../components/calcContainer/CalcInput'
 import CalcSelect from '../components/calcContainer/CalcSelect'
 import CalcButton from '../components/calcContainer/CalcButton'
 import CalculatorTypePicker from '../components/calcContainer/CalculatorTypePicker'
-import CalculationResult from '../components/calcutationResult/CalcutatonResult'
+import CalculationResult from '../components/calculationResult/CalculationResult'
+import PaymentSchedule from '../components/calculationResult/PaymentSchedule'
 
 export enum CalculationTypeEnum {
     differentiated = 'Дифференцированный',
@@ -49,8 +51,7 @@ function validationPercent(
     e: React.ChangeEvent<HTMLInputElement>,
     onChange: React.Dispatch<React.SetStateAction<string>>
 ) {
-    const re = /^(?:\d{1,2})(?:[.,]\d{1,2})*/
-    console.log(e.target.value)
+    const re = /^(?:\d{1,2}[.]?)(?:\d{1,2})?/
     let value = e.target.value
 
     value = value.replace(/\-/, '')
@@ -61,13 +62,20 @@ function validationPercent(
             value = value.slice(0, 2) + '.' + value.slice(2)
         }
         const subValue = re.exec(value) || []
-        subValue[0] = subValue[0]?.replace(/^0+(?=\d)*\D*/, '')
+        subValue[0] = subValue[0]?.replace(/0(?=\d)(?!\.)/, '')
         if (subValue[0]) {
             onChange(subValue[0])
         } else {
             onChange('0')
         }
     }
+}
+
+function formatPercent(
+    value: string,
+    onChange: React.Dispatch<React.SetStateAction<string>>
+) {
+    onChange((+value).toFixed(2))
 }
 
 export default function HomePage() {
@@ -89,6 +97,22 @@ export default function HomePage() {
         PeriodicityPaymentTypeEnum.monthly
     )
 
+    const [isOpenPaymentSchedule, setIsOpenPaymentSchedule] = useState(false)
+
+    const periodicityPaymentErrorCheker = () =>
+        periodicityPayment === PeriodicityPaymentTypeEnum.annual &&
+        +creditPeriod < 12 &&
+        creditPeriodUnit === CreditPeriodUnitTypes.month
+
+    function windowClickHandler(event: MouseEvent) {
+        if ((event.target as Element).classList[0] === 'app-bg') {
+            setIsOpenPaymentSchedule(false)
+        }
+    }
+    useEffect(() => {
+        window.addEventListener('click', (e) => windowClickHandler(e))
+    }, [])
+
     const calculationResult = useMemo(
         () =>
             calculation(
@@ -99,6 +123,7 @@ export default function HomePage() {
                 creditPeriodUnit == 'м.' ? +creditPeriod : +creditPeriod * 12,
                 periodicityPayment.toString()
             ),
+
         [
             calculationType,
             calculatorType,
@@ -109,80 +134,108 @@ export default function HomePage() {
             creditPeriodUnit,
         ]
     )
-    console.log(calculationResult)
+
+    const isCalculationResultValid = useMemo(
+        () =>
+            validCalculationResult(
+                calculationResult.calculationInfo.result,
+                calculationResult.creditInfo.sum,
+                calculationResult.creditInfo.percentSum
+            ),
+        [calculationResult]
+    )
 
     return (
         <div className="calculator">
-            <div className="calc-form">
-                <CalculatorTypePicker
-                    calculatorTypeEnum={CalculatorTypeEnum}
-                    calculatorType={calculatorType}
-                    onChange={setCalculatorType}
-                />
-                <div className="calc-container">
-                    <div>
-                        <CalcInput
-                            value={creditPeriod}
-                            onChange={setCreditPeriod}
-                            validation={{
-                                max: '100',
-                                validCheck: validation,
-                            }}
-                            unitType={{
-                                unit: creditPeriodUnit,
-                                setUnit: setCreditPeriodUnit,
-                                enumSelect: CreditPeriodUnitTypes,
-                            }}
-                        >
-                            Срок займа
-                        </CalcInput>
-                        <CalcInput
-                            value={creditSum}
-                            onChange={setCreditSum}
-                            validation={{
-                                max: '1000000000',
-                                validCheck: validation,
-                            }}
-                        >
-                            Сумма платежа/кредита
-                        </CalcInput>
-                        <CalcInput
-                            value={creditPercent}
-                            onChange={setCreditPercent}
-                            validation={{
-                                max: '99',
-                                validCheck: validationPercent,
-                            }}
-                        >
-                            Процентная ставка
-                        </CalcInput>
-                    </div>
-                    <div>
-                        <CalcSelect
-                            enum={CalculationTypeEnum}
-                            onChange={setCalculationType}
-                            value={calculationType}
-                        >
-                            Порядок погашения
-                        </CalcSelect>
-                        <CalcSelect
-                            enum={PeriodicityPaymentTypeEnum}
-                            onChange={setPeriodicityPayment}
-                            value={periodicityPayment}
-                        >
-                            Периодичность погашения
-                        </CalcSelect>
-                        <CalcButton />
+            {!isOpenPaymentSchedule && (
+                <div className="calc-form">
+                    <CalculatorTypePicker
+                        calculatorTypeEnum={CalculatorTypeEnum}
+                        calculatorType={calculatorType}
+                        onChange={setCalculatorType}
+                    />
+                    <div className="calc-container">
+                        <div>
+                            <CalcInput
+                                value={creditPeriod}
+                                onChange={setCreditPeriod}
+                                errorChecker={periodicityPaymentErrorCheker}
+                                validation={{
+                                    max: '100',
+                                    validCheck: validation,
+                                }}
+                                unitType={{
+                                    unit: creditPeriodUnit,
+                                    setUnit: setCreditPeriodUnit,
+                                    enumSelect: CreditPeriodUnitTypes,
+                                }}
+                            >
+                                Срок займа
+                            </CalcInput>
+                            <CalcInput
+                                value={creditSum}
+                                onChange={setCreditSum}
+                                validation={{
+                                    max: '1000000000',
+                                    validCheck: validation,
+                                }}
+                            >
+                                Сумма платежа/кредита
+                            </CalcInput>
+                            <CalcInput
+                                value={creditPercent}
+                                onChange={setCreditPercent}
+                                validation={{
+                                    max: '99',
+                                    validCheck: validationPercent,
+                                    onBlur: formatPercent,
+                                }}
+                            >
+                                Процентная ставка
+                            </CalcInput>
+                        </div>
+                        <div>
+                            <CalcSelect
+                                enum={PeriodicityPaymentTypeEnum}
+                                onChange={setPeriodicityPayment}
+                                value={periodicityPayment}
+                                errorChecker={periodicityPaymentErrorCheker}
+                            >
+                                Периодичность погашения
+                            </CalcSelect>
+                            <CalcSelect
+                                enum={CalculationTypeEnum}
+                                onChange={setCalculationType}
+                                value={calculationType}
+                            >
+                                Порядок погашения
+                            </CalcSelect>
+                            <CalcButton
+                                onClick={setIsOpenPaymentSchedule}
+                                isCalculationResultValid={
+                                    isCalculationResultValid
+                                }
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="total">
-                <CalculationResult
+            )}
+            {!isOpenPaymentSchedule && (
+                <div className="total">
+                    <CalculationResult
+                        calculationInfo={calculationResult.calculationInfo}
+                        creditInfo={calculationResult.creditInfo}
+                        isResultValueValid={isCalculationResultValid}
+                    />
+                </div>
+            )}
+            {isOpenPaymentSchedule && (
+                <PaymentSchedule
                     calculationInfo={calculationResult.calculationInfo}
                     creditInfo={calculationResult.creditInfo}
                     creditCalculation={calculationResult.creditCalculation}
                 />
-            </div>
+            )}
         </div>
     )
 }

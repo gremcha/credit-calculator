@@ -10,6 +10,7 @@ interface CalcInputInterface {
     onChange: React.Dispatch<React.SetStateAction<any>>
     value: any
     children: string
+    errorChecker?: Function
 }
 
 export default function CalcSelect(props: CalcInputInterface) {
@@ -25,7 +26,9 @@ export default function CalcSelect(props: CalcInputInterface) {
 
     return (
         <div
-            className="calc-elem calc-select"
+            className={`calc-elem ${
+                props.errorChecker && props.errorChecker() ? 'error' : ''
+            } calc-select`}
             tabIndex={1}
             onBlur={() => setIsOpen(false)}
             onClick={() => setIsOpen(!isOpen)}

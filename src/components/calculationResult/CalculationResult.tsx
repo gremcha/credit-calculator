@@ -1,6 +1,8 @@
 import React from 'react'
 import '../../styles/calc.css'
 
+import CalcResultValue from './CalcResultValue'
+
 interface CalculationResultInterface {
     calculationInfo: {
         header: string
@@ -10,45 +12,13 @@ interface CalculationResultInterface {
         sum: number
         percentSum: number
     }
-    creditCalculation: {
-        percentPayment: number
-        onePayment: number
-        loanBalance: number
-    }[]
-}
-
-interface CalcResultValueInterface {
-    head: string
-    value: number
-}
-
-function CalcResultValue(props: CalcResultValueInterface) {
-    return (
-        <div className="calc-result">
-            <span className="calc-result-header">{props.head}</span>
-            <span className="calc-result-value">
-                {Number(
-                    props.value.toString().replace(/\s/g, '')
-                ).toLocaleString('ru-RU')}
-            </span>
-        </div>
-    )
+    isResultValueValid: boolean
 }
 
 export default function CalculationResult(props: CalculationResultInterface) {
-    let isResultValueValid = [
-        props.calculationInfo.result,
-        props.creditInfo.sum,
-        props.creditInfo.percentSum,
-    ].reduce(
-        (prevValue, value) =>
-            (prevValue &&= /^\d+(\.\d+)?$/.test(value.toString())),
-        true
-    )
-
     return (
         <div className="credit-info">
-            {isResultValueValid && (
+            {props.isResultValueValid && (
                 <>
                     <CalcResultValue
                         head={props.calculationInfo.header}
@@ -64,7 +34,7 @@ export default function CalculationResult(props: CalculationResultInterface) {
                     />
                 </>
             )}
-            {!isResultValueValid && (
+            {!props.isResultValueValid && (
                 <>
                     <span className="calc-result-value">Ошибка</span>
                     <span className="calc-result-header">

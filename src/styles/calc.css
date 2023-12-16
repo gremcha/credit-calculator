@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  height: 100%;
 }
 
 .total {
@@ -42,6 +43,16 @@
   margin: 35px 20px;
   border-radius: 10px;
 }
+.calc-elem.error {
+  box-shadow: 0 0 10px red;
+}
+.calc-elem.error:hover::after {
+  content: "Несовместимые значения";
+  position: absolute;
+  bottom: 110%;
+  left: 0;
+  font-size: 16px;
+}
 
 .calc-elem-header {
   position: absolute;
@@ -53,22 +64,32 @@
 }
 
 .calc-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  cursor: pointer;
   height: 62px;
   width: 242px;
   margin: 0;
   background-color: rgba(255, 255, 255, 0.7215686275);
   border-radius: 8px;
+  border: 0;
+  transition-duration: 0.1s;
+}
+
+.calc-button:focus {
+  outline: none;
+}
+
+.calc-button:active {
+  height: 70px;
+  width: 250px;
 }
 
 .calc-button-bg {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   margin: 35px 20px;
-  left: 0;
   height: 70px;
   width: 250px;
   border-radius: 10px;
@@ -89,13 +110,22 @@
   color: rgba(255, 255, 255, 0);
 }
 
+.type-checkbox {
+  display: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  position: absolute;
+}
+
 .type-picker {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0 5px;
   width: 450px;
   height: 50px;
@@ -103,6 +133,26 @@
   border-radius: 100px;
   margin-bottom: 15px;
   cursor: pointer;
+}
+.type-picker::after {
+  content: "";
+  position: absolute;
+  display: block;
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 50%;
+  height: 40px;
+  border-radius: 100px;
+  z-index: 1;
+  left: 5px;
+  right: auto;
+  transition: left 0.5s;
+  transition-timing-function: ease-out;
+  animation: slider-left 0.5s ease-out forwards;
+}
+
+.type-checkbox:checked + .type-picker::after {
+  left: calc(50% - 5px);
+  animation: slider-right 0.5s ease-out forwards;
 }
 
 .type {
@@ -113,20 +163,42 @@
   width: 55%;
   height: 40px;
   border-radius: 100px;
-  color: rgba(255, 255, 255, 0.7215686275);
+  color: rgba(0, 0, 0, 0.7215686275);
+  z-index: 2;
 }
 
-.type-active {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.6);
-  width: 55%;
-  height: 40px;
-  border-radius: 100px;
+@keyframes slider-left {
+  0% {
+    width: 50%;
+  }
+  40% {
+    width: calc(50% + 40px);
+    translate: -20px 0;
+  }
+  60% {
+    width: calc(50% + 40px);
+    translate: -20px 0;
+  }
+  100% {
+    width: 50%;
+  }
 }
-
+@keyframes slider-right {
+  0% {
+    width: 50%;
+  }
+  40% {
+    width: calc(50% + 40px);
+    translate: -20px 0;
+  }
+  60% {
+    width: calc(50% + 40px);
+    translate: -20px 0;
+  }
+  100% {
+    width: 50%;
+  }
+}
 .calc-input {
   padding: 0 15px;
   display: flex;
@@ -213,25 +285,26 @@
 }
 
 .credit-info {
-  display: flex;
   width: 250px;
   padding: 20px;
-  gap: 20px;
+  display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
 .calc-result {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
+  flex-direction: column;
   gap: 10px;
 }
 
 .calc-result-header {
   margin: 0;
   color: #5d5d5d;
-  font-size: 15px;
+  font-size: 16px;
   text-align: left;
+  font-weight: 300;
 }
 
 .calc-result-value {
@@ -245,4 +318,71 @@
   color: #ae2323;
   font-size: 16px;
   text-align: left;
+}
+
+.payment-schedule {
+  min-height: 100vh;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  z-index: 10;
+  background-color: #DEEBE0;
+}
+
+.payment-schedule-header {
+  background-color: #DEEBE0;
+  padding: 16px 16px 0 16px;
+  position: sticky;
+  top: 0;
+}
+
+.payment-schedule-info {
+  display: flex;
+  position: sticky;
+  top: 16px;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.payment-schedule-head {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.payment-schedule-values {
+  display: flex;
+  gap: 30px;
+}
+
+.main-table {
+  background-color: #DEEBE0;
+  padding: 0 16px;
+}
+
+.payment-schedule-table {
+  display: grid;
+  grid-template-columns: 100px repeat(4, 240px);
+  height: 50px;
+}
+.payment-schedule-table.header-row {
+  margin-top: 16px;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(to right, #243dc6, #199d36);
+}
+
+.grid-elem {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 24px;
+  justify-content: end;
+}
+
+@media screen and (min-width: 1200) {
+  .payment-schedule-table {
+    grid-template-columns: 100px repeat(4, 20px);
+  }
 }/*# sourceMappingURL=calc.css.map */

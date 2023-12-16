@@ -5,10 +5,15 @@ import { CreditPeriodUnitTypes } from '../../pages/HomePage'
 interface CalcInputInterface {
     value: string
     onChange: React.Dispatch<React.SetStateAction<string>>
+    errorChecker?: Function
     validation: {
         max: string
         validCheck: (
             e: React.ChangeEvent<HTMLInputElement>,
+            onChange: React.Dispatch<React.SetStateAction<string>>
+        ) => void
+        onBlur?: (
+            value: string,
             onChange: React.Dispatch<React.SetStateAction<string>>
         ) => void
     }
@@ -62,7 +67,11 @@ function SelectInput(props: SelectInputInterface) {
 
 export default function CalcInput(props: CalcInputInterface) {
     return (
-        <div className="calc-elem calc-input">
+        <div
+            className={`calc-elem ${
+                props.errorChecker && props.errorChecker() ? 'error' : ''
+            } calc-input`}
+        >
             <p className="calc-elem-header">{props.children}</p>
             <input
                 className="input"
@@ -71,6 +80,9 @@ export default function CalcInput(props: CalcInputInterface) {
                 value={props.value}
                 onChange={(e) => props.validation.validCheck(e, props.onChange)}
                 inputMode="decimal"
+                onBlur={() =>
+                    props.validation.onBlur?.(props.value, props.onChange)
+                }
             />
             {props.unitType && (
                 <SelectInput
