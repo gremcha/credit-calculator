@@ -6,8 +6,31 @@
 .calculator
     display: flex
     align-items: center
+    justify-content: center
+    flex-direction: column
     position: relative
-    height: 100%
+
+.main
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+
+.calc-info
+    display: flex
+    flex-direction: column
+    margin-bottom: 160px
+    margin-top: 120px
+
+.calc-head
+    color: white
+    font-size: 56px
+    font-weight: 600
+    margin-bottom: 20px
+
+.calc-warning
+    color: white
+    font-size: 16px
 
 .total
     height: 400px
@@ -25,13 +48,17 @@
 
 .calc-container
     position: relative
-    padding: 0 3%
+    padding: 16px
 
     display: flex
-    flex-direction: row
+    flex-direction: column
 
     background-color: #ffffff6d
     border-radius: 20px 0 0 20px
+
+.calc-container-row
+    display: flex
+    flex-direction: row
 
 .calc-elem
     height: 70px
@@ -42,7 +69,7 @@
     box-sizing: border-box
 
     background-color: white
-    margin: 35px 20px
+    margin: 20px
     border-radius: 10px
 
     &.error
@@ -68,9 +95,10 @@
 .calc-button
     display: block
     cursor: pointer
+    padding: 0
 
-    height: 62px
-    width: 242px
+    height: 88%
+    width: 96%
     margin: 0
     background-color: #ffffffb8
 
@@ -83,8 +111,8 @@
     outline: none
 
 .calc-button:active
-    height: 70px
-    width: 250px
+    height: 100%
+    width: 100%
 
 .calc-button-bg
     display: flex
@@ -93,7 +121,7 @@
 
     cursor: pointer
 
-    margin: 35px 20px
+    margin: 20px
     height: 70px
     width: 250px
     border-radius: 10px
@@ -108,8 +136,7 @@
     letter-spacing: 1px
 
     background-image: linear-gradient(to right,#112dca, #199d36)
-    background-size: cover
-    background-clip: text
+
     -webkit-background-clip: text
     color: #ffffff00
 // ..............CALCULATOR TYPE PICKER..............
@@ -276,7 +303,7 @@
 // ............CALCULATION RESULT STYLES.............
 
 .credit-info
-    width: 250px
+    width: 280px
     padding: 20px
 
     display: flex
@@ -293,7 +320,7 @@
 .calc-result-header
     margin: 0
     color: #5d5d5d
-    font-size: 16px
+    font-size: 20px
     text-align: left
     font-weight: 300
 
@@ -313,17 +340,11 @@
 .payment-schedule
     min-height: 100vh
 
-    position: absolute
-    left: 50%
-    top: 0
-    transform: translateX(-50%)
-    z-index: 10
-
     background-color: #DEEBE0
 
 .payment-schedule-header
     background-color: #DEEBE0
-    padding: 16px 16px 0 16px
+    padding: 16px 32px 0 32px
     position: sticky
     top: 0
 
@@ -342,14 +363,15 @@
 .payment-schedule-values
     display: flex
     gap: 30px
+    align-items: flex-end
 
 .main-table
     background-color: #DEEBE0
-    padding: 0 16px
+    padding: 0 32px
 
 .payment-schedule-table
     display: grid
-    grid-template-columns: 100px repeat(4, 240px)
+    grid-template-columns: 32px repeat(4, 240px)
     height: 50px
 
     &.header-row
@@ -361,12 +383,147 @@
 .grid-elem
     display: flex
     align-items: center
-    padding: 0 10px
+    text-align: end
+    margin: 0 10px
     font-size: 24px
     justify-content: end
 
-@media screen and (min-width: 1200)
-    .payment-schedule-table
-        grid-template-columns: 100px repeat(4, 20px)
-
 // ..................................................
+
+@media screen and (max-width: 1100px)
+    .payment-schedule-table
+        grid-template-columns: 32px repeat(4, 200px)
+        height: 56px
+
+@media screen and (max-width: 900px)
+    .calculator
+        flex-direction: column
+
+    .total
+        height: 100px
+        margin-top: 0
+        border-radius: 0 0 20px 20px
+
+    .calc-container
+        border-radius: 20px 20px 0 0
+
+    .credit-info
+        flex-direction: row
+        width: 612px
+        justify-content: space-between
+
+    .payment-schedule-info
+        flex-direction: column
+        align-items: flex-start
+
+    .payment-schedule-table
+        grid-template-columns: 32px repeat(3, 200px)
+        height: 56px
+
+    .hide-on-mobile-1
+        display: none
+
+@media screen and (max-width: 650px)
+    .type-picker
+        margin-top: 10px
+
+    .calc-container-row
+        flex-direction: column
+
+    .calc-elem
+        width: 400px
+
+    .calc-button-bg
+        width: 400px
+
+    .calc-button
+        width: 98%
+
+    .credit-info
+        width: 472px
+
+    .total
+        height: 270px
+
+    .credit-info
+        flex-direction: column
+        justify-content: start
+
+    .total-margin
+        height: 10px
+
+    .payment-schedule-table
+        justify-content: space-between
+        grid-template-columns: 32px repeat(2, 200px)
+
+    .hide-on-mobile-2
+        display: none
+
+@media screen and (max-width: 600px)
+    .type-picker
+        width: 350px
+        height: 70px
+        padding: 0 30px
+        justify-content: space-between
+
+        &::after
+            height: 60px
+
+    .type
+        width: 40%
+
+    .calc-elem
+        width: 300px
+
+    .calc-button-bg
+        width: 300px
+
+    .credit-info
+        width: 372px
+
+    .payment-schedule-values
+        display: none
+
+    .payment-schedule-table
+        justify-content: space-between
+        grid-template-columns: 32px repeat(2, 200px)
+
+@media screen and (max-width: 450px)
+    .type-picker
+        width: 310px
+        padding: 0 30px
+        justify-content: space-between
+
+    .calc-elem
+        width: 260px
+        margin: 10px 5px
+
+    .calc-button-bg
+        width: 260px
+        margin: 10px 5px
+
+    .calc-button
+        width: 97%
+
+    .credit-info
+        width: 302px
+
+    .payment-schedule-header
+        padding: 16px 8px 0 8px
+
+    .payment-schedule-info
+        align-items: center
+
+    .main-table
+        padding: 16px 8px 0 8px
+
+    .payment-schedule-table
+        justify-content: space-between
+        grid-template-columns: repeat(2, 190px)
+
+    .hide-on-mobile-3
+        display: none
+
+    .grid-elem
+        text-align: center
+        justify-content: center

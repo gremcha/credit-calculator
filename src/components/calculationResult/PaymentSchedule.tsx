@@ -42,26 +42,30 @@ export default function PaymentSchedule(props: PaymentScheduleInterface) {
                     </div>
                 </div>
                 <div className="payment-schedule-table header-row">
-                    <div className="grid-elem">Номер</div>
-                    <div className="grid-elem">Размер платежа</div>
-                    <div className="grid-elem">Тело платежа</div>
-                    <div className="grid-elem">Проценты</div>
+                    <div className="grid-elem hide-on-mobile-3">#</div>
+                    <div className="grid-elem">Платеж</div>
+                    <div className="grid-elem hide-on-mobile-1">
+                        Тело платежа
+                    </div>
+                    <div className="grid-elem hide-on-mobile-2">Проценты</div>
                     <div className="grid-elem">Остаток</div>
                 </div>
             </div>
             <div className="main-table">
                 {props.creditCalculation.map((value, index) => (
                     <div className="payment-schedule-table">
-                        <div className="grid-elem">{index + 1}</div>
+                        <div className="grid-elem hide-on-mobile-3">
+                            {index + 1}
+                        </div>
                         <div className="grid-elem">
                             {value.onePayment.toFixed(2)}
                         </div>
-                        <div className="grid-elem">
+                        <div className="grid-elem hide-on-mobile-1">
                             {(value.onePayment - value.percentPayment).toFixed(
                                 2
                             )}
                         </div>
-                        <div className="grid-elem">
+                        <div className="grid-elem hide-on-mobile-2">
                             {value.percentPayment.toFixed(2)}
                         </div>
                         <div className="grid-elem">

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { ElementType, useEffect, useMemo, useState } from 'react'
 import '../styles/calc.css'
 
 import calculation from '../services/calculation'
@@ -104,13 +104,29 @@ export default function HomePage() {
         +creditPeriod < 12 &&
         creditPeriodUnit === CreditPeriodUnitTypes.month
 
-    function windowClickHandler(event: MouseEvent) {
-        if ((event.target as Element).classList[0] === 'app-bg') {
+    function windowClickHandler(event?: Element): void {
+        if (event) {
+            if (event.classList[0] === 'app-bg') {
+                setIsOpenPaymentSchedule(false)
+            }
+        } else {
             setIsOpenPaymentSchedule(false)
         }
     }
+
     useEffect(() => {
-        window.addEventListener('click', (e) => windowClickHandler(e))
+        window.addEventListener('click', (e) =>
+            windowClickHandler(e.target as Element)
+        )
+        return window.addEventListener('click', (e) =>
+            windowClickHandler(e.target as Element)
+        )
+    }, [])
+
+    useEffect(() => {
+        window.onpopstate = function () {
+            windowClickHandler()
+        }
     }, [])
 
     const calculationResult = useMemo(
@@ -148,87 +164,102 @@ export default function HomePage() {
     return (
         <div className="calculator">
             {!isOpenPaymentSchedule && (
-                <div className="calc-form">
-                    <CalculatorTypePicker
-                        calculatorTypeEnum={CalculatorTypeEnum}
-                        calculatorType={calculatorType}
-                        onChange={setCalculatorType}
-                    />
-                    <div className="calc-container">
-                        <div>
-                            <CalcInput
-                                value={creditPeriod}
-                                onChange={setCreditPeriod}
-                                errorChecker={periodicityPaymentErrorCheker}
-                                validation={{
-                                    max: '100',
-                                    validCheck: validation,
-                                }}
-                                unitType={{
-                                    unit: creditPeriodUnit,
-                                    setUnit: setCreditPeriodUnit,
-                                    enumSelect: CreditPeriodUnitTypes,
-                                }}
-                            >
-                                Срок займа
-                            </CalcInput>
-                            <CalcInput
-                                value={creditSum}
-                                onChange={setCreditSum}
-                                validation={{
-                                    max: '1000000000',
-                                    validCheck: validation,
-                                }}
-                            >
-                                Сумма платежа/кредита
-                            </CalcInput>
-                            <CalcInput
-                                value={creditPercent}
-                                onChange={setCreditPercent}
-                                validation={{
-                                    max: '99',
-                                    validCheck: validationPercent,
-                                    onBlur: formatPercent,
-                                }}
-                            >
-                                Процентная ставка
-                            </CalcInput>
-                        </div>
-                        <div>
-                            <CalcSelect
-                                enum={PeriodicityPaymentTypeEnum}
-                                onChange={setPeriodicityPayment}
-                                value={periodicityPayment}
-                                errorChecker={periodicityPaymentErrorCheker}
-                            >
-                                Периодичность погашения
-                            </CalcSelect>
-                            <CalcSelect
-                                enum={CalculationTypeEnum}
-                                onChange={setCalculationType}
-                                value={calculationType}
-                            >
-                                Порядок погашения
-                            </CalcSelect>
-                            <CalcButton
-                                onClick={setIsOpenPaymentSchedule}
-                                isCalculationResultValid={
-                                    isCalculationResultValid
-                                }
-                            />
-                        </div>
-                    </div>
+                <div className="calc-info">
+                    <span className="calc-head">Кредитный калькулятор</span>
+                    <span className="calc-warning">
+                        Данный калькулятор сделан в учебных целях
+                    </span>
+                    <span className="calc-warning">
+                        и может предоставлять недостоверную информацию
+                    </span>
                 </div>
             )}
             {!isOpenPaymentSchedule && (
-                <div className="total">
-                    <CalculationResult
-                        calculationInfo={calculationResult.calculationInfo}
-                        creditInfo={calculationResult.creditInfo}
-                        isResultValueValid={isCalculationResultValid}
-                    />
+                <div className="main">
+                    <div className="calc-form">
+                        <CalculatorTypePicker
+                            calculatorTypeEnum={CalculatorTypeEnum}
+                            calculatorType={calculatorType}
+                            onChange={setCalculatorType}
+                        />
+                        <div className="calc-container">
+                            <div className="calc-container-row">
+                                <CalcInput
+                                    value={creditPeriod}
+                                    onChange={setCreditPeriod}
+                                    errorChecker={periodicityPaymentErrorCheker}
+                                    validation={{
+                                        max: '100',
+                                        validCheck: validation,
+                                    }}
+                                    unitType={{
+                                        unit: creditPeriodUnit,
+                                        setUnit: setCreditPeriodUnit,
+                                        enumSelect: CreditPeriodUnitTypes,
+                                    }}
+                                >
+                                    Срок займа
+                                </CalcInput>
+                                <CalcSelect
+                                    enum={PeriodicityPaymentTypeEnum}
+                                    onChange={setPeriodicityPayment}
+                                    value={periodicityPayment}
+                                    errorChecker={periodicityPaymentErrorCheker}
+                                >
+                                    Периодичность погашения
+                                </CalcSelect>
+                            </div>
+                            <div className="calc-container-row">
+                                <CalcInput
+                                    value={creditSum}
+                                    onChange={setCreditSum}
+                                    validation={{
+                                        max: '1000000000',
+                                        validCheck: validation,
+                                    }}
+                                >
+                                    Сумма платежа/кредита
+                                </CalcInput>
+                                <CalcSelect
+                                    enum={CalculationTypeEnum}
+                                    onChange={setCalculationType}
+                                    value={calculationType}
+                                >
+                                    Порядок погашения
+                                </CalcSelect>
+                            </div>
+                            <div className="calc-container-row">
+                                <CalcInput
+                                    value={creditPercent}
+                                    onChange={setCreditPercent}
+                                    validation={{
+                                        max: '99',
+                                        validCheck: validationPercent,
+                                        onBlur: formatPercent,
+                                    }}
+                                >
+                                    Процентная ставка
+                                </CalcInput>
+                                <CalcButton
+                                    onClick={setIsOpenPaymentSchedule}
+                                    isCalculationResultValid={
+                                        isCalculationResultValid
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="total">
+                        <CalculationResult
+                            calculationInfo={calculationResult.calculationInfo}
+                            creditInfo={calculationResult.creditInfo}
+                            isResultValueValid={isCalculationResultValid}
+                        />
+                    </div>
+                    <div className="total-margin"></div>
                 </div>
             )}
+            {!isOpenPaymentSchedule && <></>}
             {isOpenPaymentSchedule && (
                 <PaymentSchedule
                     calculationInfo={calculationResult.calculationInfo}

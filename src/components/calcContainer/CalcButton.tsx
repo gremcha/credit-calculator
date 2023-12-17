@@ -10,6 +10,7 @@ export default function CalcButton(props: CalcButtonInterface) {
     function calcButtonClickHandler() {
         if (props.isCalculationResultValid) {
             props.onClick(true)
+            window.history.pushState({}, '')
         }
     }
     return (
