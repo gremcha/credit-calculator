@@ -1,5 +1,7 @@
 # This is a credit calculator
 
+Deploy: https://gremcha.github.io/credit-calculator
+
 It has a perfect design but it is adaptive
 
 I made it without a layout in figma
