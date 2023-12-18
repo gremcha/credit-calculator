@@ -396,8 +396,16 @@
         height: 56px
 
 @media screen and (max-width: 900px)
-    .calculator
+    .main
         flex-direction: column
+
+    .calc-info
+        margin-top: 96px
+        margin-bottom: 64px
+
+    .calc-head
+        margin-bottom: 10px
+        font-size: 48px
 
     .total
         height: 100px
@@ -424,6 +432,14 @@
         display: none
 
 @media screen and (max-width: 650px)
+
+    .calc-info
+        margin-top: 10px
+        margin-bottom: 10px
+    .calc-head
+        font-size: 40px
+        margin-bottom: 5px
+
     .type-picker
         margin-top: 10px
 
@@ -469,6 +485,12 @@
         &::after
             height: 60px
 
+    .calc-head
+        font-size: 32px
+
+    .calc-warning
+        font-size: 16px
+
     .type
         width: 40%
 
@@ -493,6 +515,9 @@
         width: 310px
         padding: 0 30px
         justify-content: space-between
+
+    .calc-head
+        font-size: 24px
 
     .calc-elem
         width: 260px
